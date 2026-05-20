@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Read(//c/Users/User/Desktop/New folder/Project/**)"
-    ]
-  }
-}
