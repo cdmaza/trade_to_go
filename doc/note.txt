@@ -1,0 +1,116 @@
+what can the project do:
+- give aleart
+
+features:
+1. give ale
+
+
+
+resources:
+extract api
+https://github.com/alpacahq/alpaca-py
+https://github.com/stoqey/ib
+https://github.com/Voyz/ibind?tab=readme-ov-file
+
+
+Documentation Structure Overview
+
+==============================
+Tier 1: Getting Started
+==============================
+
+File: 00-getting-started.md
+Purpose: Main entry point – How to navigate docs, learning path
+
+File: README.md
+Purpose: Quick index of all documents
+
+
+==============================
+Tier 2: Core Documentation (Already Created)
+==============================
+
+01-requirements.md
+- Purpose: User requirements, acceptance criteria
+- Status: Done
+
+02-architecture.md
+- Purpose: System architecture, data flows
+- Status: Done
+
+03-database-schema.md
+- Purpose: Prisma schema, migrations
+- Status: Done
+
+04-api-specifications.md
+- Purpose: Complete API endpoints
+- Status: Done
+
+05-components.md
+- Purpose: React component specs
+- Status: Done
+
+06-permissions.md
+- Purpose: RBAC system
+- Status: Done
+
+07-navigation.md
+- Purpose: Menu structure
+- Status: Done
+
+08-implementation-phases.md
+- Purpose: Phase-by-phase guide
+- Status: Done
+
+09-file-changes.md
+- Purpose: File reference
+- Status: Done
+
+10-testing.md
+- Purpose: Testing checklist
+- Status: Done
+
+
+==============================
+Tier 3: Operational Documentation (To Create)
+==============================
+
+11-environment-config.md
+- Purpose: Environment variables, deployment config
+- Status: Pending
+
+12-data-seeding.md
+- Purpose: Initial data, sample scripts
+- Status: Pending
+
+13-ui-design-system.md
+- Purpose: Colors, typography, Tailwind
+- Status: Pending
+
+14-error-handling.md
+- Purpose: Error codes, boundaries
+- Status: Pending
+
+15-deployment-guide.md
+- Purpose: Deployment, rollback
+- Status: Pending
+
+16-glossary.md
+- Purpose: Malay terms, business definitions
+- Status: Pending
+
+17-integration-guide.md
+- Purpose: Integration with existing system
+- Status: Pending
+
+18-hooks-utilities.md
+- Purpose: Custom hooks, utilities
+- Status: Pending
+
+19-security-guidelines.md
+- Purpose: Security practices
+- Status: Pending
+
+20-accessibility.md
+- Purpose: WCAG, keyboard navigation, a11y
+- Status: Pending

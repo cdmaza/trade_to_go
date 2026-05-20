@@ -1,0 +1,5 @@
+Plan 1
+1. Scrap gold information
+2. Whatsapp or telegram to give notification
+3. Store information in server using postgresql
+
