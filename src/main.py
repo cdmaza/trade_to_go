@@ -1,18 +1,17 @@
-from src.common.conn_details import init_db, insert_stocks
-from src.extract.get_gold import get_gold
-from src.notify.notifier import notify_latest
+from extract.get_gold import get_gold
+from data.store_gold import into_sqllite
+from datetime import datetime, date
 
+now = datetime.now()
 
 def run():
-    init_db()
+    run_gold()
 
+
+def run_gold():
     data = get_gold()
-    inserted = insert_stocks(data)
-    print(f"Scraped and stored {inserted} rows.")
-
-    notify_latest(limit=max(inserted, 1))
-    print("Telegram notification sent.")
-
+    into_sqllite(data, now)
+    print(f"Scraped and stored {now} gold data.")
 
 if __name__ == "__main__":
     run()
