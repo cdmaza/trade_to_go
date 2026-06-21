@@ -25,5 +25,8 @@ app = websocket.WebSocketApp(
 )
 app.run_forever()
 
-print("Sell Price:", result.get("bursaBuyPrice"))
-print("Buy Price:", result.get("bursaSellPrice"))
+def get_gold():
+    return {
+        "bursaBuyPrice": result.get("bursaBuyPrice", 0),
+        "bursaSellPrice": result.get("bursaSellPrice", 0)
+    }
