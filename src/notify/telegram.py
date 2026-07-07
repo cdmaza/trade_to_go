@@ -1,16 +1,11 @@
 import requests
 
-from src.common.config import require_telegram_config
+from common.config import require_telegram_config
 
 API_URL = "https://api.telegram.org/bot{token}/sendMessage"
 
 
 def send_message(text, parse_mode="HTML", disable_web_page_preview=True):
-    """Push a message to the configured Telegram chat.
-
-    Returns the Telegram API response JSON. Raises on network errors or a
-    non-ok response from Telegram.
-    """
     token, chat_id = require_telegram_config()
 
     response = requests.post(
