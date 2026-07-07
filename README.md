@@ -1,10 +1,9 @@
-#Trade To Go
-
+# Trade To Go
 
 **Python version** : `3.11`
 
-Scrapes Bursa Malaysia gold prices, stores them in a database, and pushes
-notifications to Telegram.
+Scrapes Bursa Malaysia gold prices from the live price stream, stores them in
+SQLite, tracks the running min/max, and pushes updates to Telegram.
 
 ## Setup
 
@@ -19,20 +18,30 @@ Create a Telegram bot with [@BotFather](https://t.me/BotFather) to get a
 
 ## Run
 
-From the project root:
+From the `src` directory:
 
 ```bash
-python -m src.main
+cd src
+python main.py
 ```
 
-This scrapes the latest prices, stores them in the SQLite database
-(`DB_PATH`, default `stock.db`), and sends the latest rows to your Telegram
-chat.
+Each run:
 
-To send a notification from whatever is already in the database without
-re-scraping:
+1. Fetches the current buy/sell price from the Bursa gold websocket
+   (`wss://bgd-adam.bursamalaysia.com/bgd/pricestream`).
+2. Stores the row in the `bursaGold` table (`gold.db`).
+3. Updates `data/temp/goldMinMax.json` — the all-time min and max price, each
+   with the timestamp it was recorded. Only rewritten when a record is beaten.
+4. Sends the buy/sell prices to your Telegram chat.
 
-```python
-from src.notify.notifier import notify_latest
-notify_latest()
+## Project layout
+
+```
+src/
+├── main.py            # pipeline entry point
+├── extract/get_gold.py    # websocket price scraper
+├── data/store_gold.py     # SQLite writer (bursaGold table)
+├── notify/telegram.py     # Telegram Bot API client
+├── notify/notifier.py     # message formatting (notify_gold, notify_latest)
+└── common/config.py       # .env loading (token, chat id, DB_PATH)
 ```
