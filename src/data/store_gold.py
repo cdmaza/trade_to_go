@@ -3,7 +3,7 @@ import sqlite3
 
 db_path = os.path.join("data", "table", "gold.db")
 
-def into_sqllite(data, timestamp):
+def into_goldtable(data, timestamp):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
@@ -16,7 +16,7 @@ def into_sqllite(data, timestamp):
                 
     bursaBuyPrice = data.get("bursaBuyPrice", 0)
     bursaSellPrice = data.get("bursaSellPrice", 0)   
-    Volume = bursaBuyPrice - bursaSellPrice
+    Volume = bursaSellPrice - bursaBuyPrice
 
 
     cursor.execute(add_bursa, (timestamp, bursaBuyPrice, bursaSellPrice, Volume))
