@@ -1,0 +1,3 @@
+# Your own stocks. `ttg call` always shows these, whatever the call is (BUY, HOLD or SELL).
+# Edit with: ttg watch add AAPL | ttg watch remove AAPL | ttg watch list
+symbols: []

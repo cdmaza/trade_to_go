@@ -1,0 +1,35 @@
+# Published results the implementation must reproduce (success criterion 1).
+# Fill each `value` from the paper itself and cite table/page in `cite`.
+# tests/replication/ skips a target while its value is null or its data file is missing.
+# Reference data goes in data/reference/ (CSV with columns: date, price), e.g. Shiller's
+# monthly S&P composite total-return series for Faber.
+
+faber_2007_sp500:
+  cite: "Faber (2007) J. Wealth Management, S&P 500 timing table (fill page/table)"
+  data: data/reference/sp500_total_return_monthly.csv
+  rule: sma_filter
+  params: {n: 10}
+  window: ["1901-01-31", "2005-12-31"]   # set to the paper's exact window
+  one_way_cost: 0.0                       # Faber's headline tables ignore costs
+  targets:
+    timing_cagr:   {value: null, tolerance: 0.005}
+    timing_max_dd: {value: null, tolerance: 0.03}
+    buy_hold_cagr: {value: null, tolerance: 0.005}
+    buy_hold_max_dd: {value: null, tolerance: 0.03}
+
+mop_2012_tsmom_factor:
+  cite: "Moskowitz, Ooi, Pedersen (2012) JFE, TSMOM factor Sharpe (fill table)"
+  # AQR 'Time Series Momentum: Original Paper Data' (free download). This checks the metric
+  # code against the paper's own factor returns; the 58-futures rule itself needs paid data.
+  data: data/reference/aqr_tsmom_factor_monthly.csv   # columns: date, return
+  rule: returns_only
+  targets:
+    sharpe: {value: null, tolerance: 0.05}
+
+erb_harvey_2013_real_gold:
+  cite: "Erb & Harvey (2013) FAJ 'The Golden Dilemma', gold/CPI ratio statistics (fill)"
+  data: data/reference/gold_cpi_monthly.csv           # columns: date, gold_usd, cpi
+  rule: gold_cpi_ratio
+  window: ["1975-01-31", "2012-12-31"]
+  targets:
+    mean_ratio: {value: null, tolerance: 0.1}

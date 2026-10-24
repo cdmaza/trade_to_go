@@ -1,0 +1,83 @@
+TRADE TO GO - TO-DO LIST
+Legend: [x] done  [ ] to do  [~] partly done  [!] needs you (keys, downloads, decisions)
+Every change is logged in codelog/CHANGELOG_<HHMM>_<YYYY-MM-DD>.md
+
+==============================
+Plan 1 (original)
+==============================
+[x] 1. Scrape gold information          -> sources/bgd.py (ttg ingest bgd)
+[x] 2. Telegram notification            -> core/telegram.py + alerts/ (state-change alerts)
+[x] 3. Store data, analytics in Excel   -> Parquet/DuckDB, ops in sqlite, `ttg export`
+
+==============================
+Phase 0 - Project tree
+==============================
+[x] uv project, Python 3.12, `ttg` CLI, config/, data layers, core/, BGD source, tests
+[x] systemd units: BGD hourly, daily, monthly (deploy/systemd/)
+[!] Deploy to homelab, copy .env, enable the three timers
+[!] Check Bursa website terms for the BGD stream (or ask infoservices@bursamalaysia.com)
+[ ] Delete legacy/ once the new pipeline has run cleanly for a week
+[!] Decide whether to delete doc/note.txt (notes from another project)
+
+==============================
+Phase 1 - Gold data (MYR)
+==============================
+[x] sources/bnm.py: USD/MYR (2008-) and Kijang Emas (2020-07-) - loaded, 4,615 + 1,413 rows
+[x] sources/lbma.py: import from LBMA portal file (auto-detects Date / USD PM columns)
+[!] Download LBMA Gold PM history from the portal; `ttg import lbma <file>`; `ttg build gold`
+[x] sources/fred.py: DFII10, DTWEXBGS
+[!] Add FRED_API_KEY to .env; `ttg ingest fred`
+[x] sources/worldbank.py: monthly average gold (cross-check only) - loaded, 801 months
+[x] curated/gold_myr_daily with kl_noon (default) and same_day conventions + available_at
+[x] reconcile: TE / correlation / premium vs Kijang, BGD, World Bank; thresholds fixed in advance
+[ ] Run the real reconciliation once LBMA is imported; record pass/fail in the codelog
+[ ] BGD reconciliation needs >= 60 days of hourly quotes (timer)
+[x] Excel export (`ttg export`)
+
+==============================
+Phase 2 - Gold research & backtest
+==============================
+[x] trials registry, BGD half-spread costs, features, rules, engine, metrics, DSR, walk-forward
+[x] Decision rule fixed in settings.yaml before any real-data run
+[x] Provisional run (World Bank averages): no rule beat DCA (not a decision)
+[!] Fill config/replication.yaml from Faber 2007 / MOP 2012 / Erb-Harvey 2013 + reference data
+[ ] Run `ttg backtest gold` on LBMA daily data -> decision: rule or DCA
+[ ] Re-run with the BGD cost from >= 20 real quotes (currently 1 quote: 1.805% one way)
+[ ] If a rule passes: set enabled: true for it in config/alerts.yaml (and nothing else)
+
+==============================
+Phase 3 - US equities
+==============================
+[x] sources/edgar.py (filed-date point-in-time), sources/tiingo.py, sources/moomoo.py
+[x] features/factors.py + signals/factor_screen.py (quality, value, 12-1 momentum)
+[x] ETF 10-month trend filter in `ttg screen us`
+[x] doc/survivorship.md
+[!] Set EDGAR_USER_AGENT, TIINGO_API_KEY; choose the screen universe (universe.yaml symbols)
+[ ] Capture real EDGAR/Tiingo/Moomoo responses as golden files (replace synthetic fixtures)
+[ ] Historical index membership for the screen backtest (see survivorship mitigation 1)
+[ ] US backtest study (ETF trend vs buy-and-hold; screen vs SPY) with trials + DSR
+[!] Short term: choose ONE universe and ONE setup
+[x] broker/moomoo_paper.py (SIMULATE only, logged to paper_orders)
+[ ] Paper-trade the short-term setup; only alert after its paper record is scored
+
+==============================
+Phase 4 - Alerts
+==============================
+[x] State machine: fire on state change only; first observation initialises silently
+[x] Dedupe, formatter (signal, price, invalidation, backtest hit rates), alert_log
+[x] Scorer at 5 / 20 / 60 trading days vs benchmark; `ttg alerts report`
+[x] Parity test: live signal at T == backtest signal at T
+[ ] After 3 months of live alerts: review `ttg alerts report` (success criterion 3)
+
+==============================
+Phase 5 - Daily call (buy / hold / sell)
+==============================
+[x] `ttg call`: gold BUY/HOLD/SELL from SMA10 + 12m momentum, official and live (Kijang Emas until LBMA is imported)
+[x] `ttg watch add|remove|list`: your own stocks, always shown
+[x] Potential stocks: top few BUY-rated names from the candidates pool in universe.yaml, ranked by momentum
+[x] Terminal view, reports/dashboard.html, Markdown, Telegram digest on change; daily systemd job runs it
+[!] Add TIINGO_API_KEY to .env, then `ttg watch add ...` and `ttg call --refresh` (stock calls need prices)
+[!] Review the starter candidates list in config/universe.yaml and replace it with the names you care about
+[ ] Backtest the stock call (ETF/large-cap trend + momentum vs buy-and-hold) before trusting it with money
+[ ] Score each call forward (5/20/60 days vs benchmark) like alerts; reuse call_state/call history
+[ ] Switch the gold call to LBMA once imported (it falls back to Kijang Emas automatically)

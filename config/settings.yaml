@@ -1,0 +1,71 @@
+# Non-secret settings. Secrets go in .env (see .env.example).
+
+data_dir: data          # relative to the project root
+reports_dir: reports
+timezone: Asia/Kuala_Lumpur
+
+sources:
+  bgd:
+    url: wss://bgd-adam.bursamalaysia.com/bgd/pricestream
+    origin: https://bgd.bursamalaysia.com
+    timeout_s: 15
+  bnm:
+    base_url: https://api.bnm.gov.my/public
+    accept: application/vnd.BNM.API.v1+json
+    fx_session: "1200"        # noon KL fixing; the only session with a middle rate
+    fx_start: "2008-01"
+    kijang_start: "2020-07"   # earliest month the API returns
+    max_requests_per_s: 2
+  lbma:
+    date_column: null         # null = auto-detect from the portal file
+    price_column: null
+  worldbank:
+    page_url: https://www.worldbank.org/en/research/commodity-markets
+    sheet: Monthly Prices
+    column: Gold
+  fred:
+    base_url: https://api.stlouisfed.org/fred
+    series:
+      real_yield_10y: DFII10
+      broad_dollar: DTWEXBGS
+  edgar:
+    base_url: https://data.sec.gov
+    max_requests_per_s: 10    # SEC fair-access cap; stay under it
+  tiingo:
+    base_url: https://api.tiingo.com
+
+gold:
+  start: "2008-01-01"
+  # kl_noon:  LBMA PM of the previous London day x BNM noon rate of day d (known at 12:00 KL)
+  # same_day: LBMA PM of day d x BNM noon rate of day d (known at 15:00 London, after BNM's fix)
+  convention: kl_noon
+
+backtest:
+  cash_rate_annual: 0.0       # cash parked in the BGD wallet earns nothing
+  # A timing rule is only alerted if ALL hold vs monthly DCA, after costs (fixed 2026-10-21):
+  decision:
+    beat_dca_terminal_wealth: true
+    beat_buy_hold_sharpe: true
+    min_deflated_sharpe: 0.95
+    walk_forward_must_beat_dca: true
+  variants:                   # every variant is a trial and counts in the deflated Sharpe
+    sma_months: [6, 8, 10, 12]
+    tsmom_months: [3, 6, 9, 12]
+
+# Pass thresholds, fixed BEFORE looking at the reconciliation results (2026-10-21).
+reconcile:
+  kijang:
+    max_monthly_te: 0.03      # annualised std of monthly return differences
+    min_daily_corr: 0.90
+  bgd:
+    max_monthly_te: 0.03
+    min_daily_corr: 0.90
+    min_days: 60              # too little BGD history = "insufficient", not pass/fail
+  worldbank:
+    max_abs_monthly_diff: 0.005   # LBMA monthly mean vs World Bank average, to May 2025
+
+# `ttg call`: today's buy / hold / sell reading (trend rules, not a validated edge).
+calls:
+  rsi_overbought: 75          # at or above this a stock is "stretched": hold, do not chase
+  stale_days: 4               # warn when the last price is older than this
+  max_potential: 5            # how many potential stocks to show besides your watchlist

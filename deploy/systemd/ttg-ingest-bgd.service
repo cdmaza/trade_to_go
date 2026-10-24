@@ -1,0 +1,10 @@
+[Unit]
+Description=trade_to_go: ingest Bursa Gold Dinar quote
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+# Adjust to where the repo lives on the homelab; uv must be on PATH for this user.
+WorkingDirectory=/opt/trade_to_go
+ExecStart=/usr/bin/env uv run ttg ingest bgd

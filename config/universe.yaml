@@ -1,0 +1,53 @@
+# What we trade or watch. Placeholders are marked TBD and are decided by research, not here.
+
+gold:
+  instruments: [BGD]                 # Bursa Gold Dinar, MYR per gram
+
+us_long_term:
+  trend_etfs: [SPY, EFA, IEF, GSG, VNQ]   # placeholder: Faber (2007) asset classes via ETFs
+  screen:
+    factors: [quality, value, mom_12_1]
+    top_fraction: 0.2                # top quintile of the composite score
+    universe: TBD                    # e.g. S&P 500 members; see doc/survivorship.md
+    symbols: []                      # tickers to fetch from EDGAR + prices; fill once the universe is chosen
+
+us_short_term:
+  universe: TBD                      # exactly one universe
+  setup: TBD                         # exactly one setup; paper-traded before alerting
+
+# Candidate pool for "potential stocks" in `ttg call`. Only the names that currently pass the
+# trend + momentum rules are shown (top few). Starter list of large liquid US names; replace it
+# with your own. Your own picks go in config/watchlist.yaml (`ttg watch add SYMBOL`).
+# Caveat: a pool of today's large caps is survivors only (doc/survivorship.md); it is fine for
+# "what looks strong now", not for judging how the filter performed in the past.
+candidates:
+  - AAPL
+  - MSFT
+  - NVDA
+  - GOOGL
+  - AMZN
+  - META
+  - AVGO
+  - COST
+  - LLY
+  - JPM
+  - V
+  - MA
+  - UNH
+  - XOM
+  - CVX
+  - HD
+  - PG
+  - KO
+  - PEP
+  - WMT
+  - NFLX
+  - ADBE
+  - CRM
+  - ORCL
+  - AMD
+  - CAT
+  - GE
+  - TMO
+  - ABBV
+  - MRK

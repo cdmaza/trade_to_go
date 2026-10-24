@@ -1,0 +1,9 @@
+[Unit]
+Description=trade_to_go: monthly on the 5th (World Bank publishes early in the month)
+
+[Timer]
+OnCalendar=*-*-05 14:00:00 Asia/Kuala_Lumpur
+Persistent=true
+
+[Install]
+WantedBy=timers.target

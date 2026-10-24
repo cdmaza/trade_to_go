@@ -1,0 +1,29 @@
+# Alert behaviour. A signal is only listed here (enabled: true) once its backtest passes
+# every condition in settings.yaml backtest.decision. Until then the gold answer is DCA.
+
+fire_on: state_change
+score_horizons_days: [5, 20, 60]
+
+benchmarks:
+  gold: dca_monthly
+  us_long_term: SPY
+  us_short_term: TBD
+
+# Instrument used as the benchmark when scoring alerts on each instrument.
+benchmark_instruments:
+  GOLD_MYR: GOLD_MYR        # DCA / buy-and-hold = holding gold
+  BGD: BGD
+
+signals:
+  gold_sma10:
+    enabled: false          # flip to true only if the gold backtest decision names this rule
+    rule: sma_filter
+    params: {n: 10}
+    instrument: GOLD_MYR
+    backtest_rule: sma10
+  gold_tsmom12:
+    enabled: false
+    rule: tsmom
+    params: {lookback: 12}
+    instrument: GOLD_MYR
+    backtest_rule: tsmom12

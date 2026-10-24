@@ -1,0 +1,15 @@
+[Unit]
+Description=trade_to_go: daily data refresh, alerts, scoring and the buy/hold/sell call
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/trade_to_go
+# Each step is its own command so one failing source doesn't block the rest; see `ttg status`.
+ExecStart=-/usr/bin/env uv run ttg ingest bnm
+ExecStart=-/usr/bin/env uv run ttg ingest fred
+ExecStart=-/usr/bin/env uv run ttg build gold
+ExecStart=-/usr/bin/env uv run ttg alerts run
+ExecStart=-/usr/bin/env uv run ttg alerts score
+ExecStart=-/usr/bin/env uv run ttg call --refresh --notify

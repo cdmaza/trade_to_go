@@ -1,0 +1,12 @@
+[Unit]
+Description=trade_to_go: monthly World Bank refresh, reconciliation, backtest and Excel export
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/trade_to_go
+ExecStart=-/usr/bin/env uv run ttg ingest worldbank
+ExecStart=-/usr/bin/env uv run ttg reconcile
+ExecStart=-/usr/bin/env uv run ttg backtest gold
+ExecStart=-/usr/bin/env uv run ttg export

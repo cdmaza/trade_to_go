@@ -1,0 +1,9 @@
+[Unit]
+Description=trade_to_go: daily at 13:00 KL (after BNM's noon rate is published)
+
+[Timer]
+OnCalendar=*-*-* 13:00:00 Asia/Kuala_Lumpur
+Persistent=true
+
+[Install]
+WantedBy=timers.target
