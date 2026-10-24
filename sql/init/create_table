@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS bursagold (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    symbol TEXT,
+    name TEXT,
+    price REAL,
+    change REAL,
+    volume INTEGER,
+    scraped_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
